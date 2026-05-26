@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Tempo de geração: 19-Maio-2026 às 11:45
+-- Tempo de geração: 26-Maio-2026 às 11:20
 -- Versão do servidor: 8.4.9
 -- versão do PHP: 8.3.26
 
@@ -20,11 +20,14 @@ SET time_zone = "+00:00";
 --
 -- Base de dados: `ipo`
 --
+CREATE DATABASE IF NOT EXISTS `ipo` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `ipo`;
 
 DELIMITER $$
 --
 -- Procedimentos
 --
+DROP PROCEDURE IF EXISTS `gerar_clientes`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `gerar_clientes` (IN `quantidade` INT)   BEGIN
     DECLARE i INT DEFAULT 1;
     DECLARE nif_base INT;
@@ -47,6 +50,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `gerar_clientes` (IN `quantidade` IN
 
 END$$
 
+DROP PROCEDURE IF EXISTS `gerar_inspetores`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `gerar_inspetores` ()   BEGIN
     DECLARE i INT DEFAULT 1;
     DECLARE nome_aleatorio VARCHAR(100);
@@ -69,6 +73,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `gerar_inspetores` ()   BEGIN
 
 END$$
 
+DROP PROCEDURE IF EXISTS `mostra_nifs_duplicados`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostra_nifs_duplicados` ()   BEGIN
 
 	SELECT * FROM vw_nifs_duplicados;
@@ -83,6 +88,7 @@ DELIMITER ;
 -- Estrutura da tabela `cliente`
 --
 
+DROP TABLE IF EXISTS `cliente`;
 CREATE TABLE IF NOT EXISTS `cliente` (
   `codcli` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(150) NOT NULL,
@@ -202,6 +208,7 @@ INSERT INTO `cliente` (`codcli`, `nome`, `morada`, `nif`) VALUES
 -- Estrutura da tabela `empregados`
 --
 
+DROP TABLE IF EXISTS `empregados`;
 CREATE TABLE IF NOT EXISTS `empregados` (
   `id` int NOT NULL AUTO_INCREMENT,
   `idloja` int NOT NULL,
@@ -217,6 +224,7 @@ CREATE TABLE IF NOT EXISTS `empregados` (
 -- Estrutura da tabela `inspecao`
 --
 
+DROP TABLE IF EXISTS `inspecao`;
 CREATE TABLE IF NOT EXISTS `inspecao` (
   `codinspecao` int NOT NULL AUTO_INCREMENT,
   `codcli` int NOT NULL,
@@ -239,6 +247,7 @@ CREATE TABLE IF NOT EXISTS `inspecao` (
 -- Estrutura da tabela `inspetor`
 --
 
+DROP TABLE IF EXISTS `inspetor`;
 CREATE TABLE IF NOT EXISTS `inspetor` (
   `codinspetor` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(100) NOT NULL,
@@ -308,6 +317,7 @@ INSERT INTO `inspetor` (`codinspetor`, `nome`, `email`) VALUES
 -- Estrutura da tabela `lojas`
 --
 
+DROP TABLE IF EXISTS `lojas`;
 CREATE TABLE IF NOT EXISTS `lojas` (
   `stamp` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
@@ -326,6 +336,7 @@ CREATE TABLE IF NOT EXISTS `lojas` (
 -- Estrutura da tabela `marca`
 --
 
+DROP TABLE IF EXISTS `marca`;
 CREATE TABLE IF NOT EXISTS `marca` (
   `codmarca` int NOT NULL AUTO_INCREMENT,
   `marca` varchar(100) NOT NULL,
@@ -420,6 +431,7 @@ INSERT INTO `marca` (`codmarca`, `marca`) VALUES
 -- Estrutura da tabela `proprietario_veiculo`
 --
 
+DROP TABLE IF EXISTS `proprietario_veiculo`;
 CREATE TABLE IF NOT EXISTS `proprietario_veiculo` (
   `idProProprietarioVeiculo` int NOT NULL AUTO_INCREMENT,
   `idProprietario` int NOT NULL,
@@ -436,6 +448,7 @@ CREATE TABLE IF NOT EXISTS `proprietario_veiculo` (
 -- Estrutura da tabela `veiculo`
 --
 
+DROP TABLE IF EXISTS `veiculo`;
 CREATE TABLE IF NOT EXISTS `veiculo` (
   `codveiculo` int NOT NULL AUTO_INCREMENT,
   `codmatricula` varchar(8) NOT NULL,
@@ -455,6 +468,7 @@ CREATE TABLE IF NOT EXISTS `veiculo` (
 -- Estrutura stand-in para vista `vw_nifs_duplicados`
 -- (Veja abaixo para a view atual)
 --
+DROP VIEW IF EXISTS `vw_nifs_duplicados`;
 CREATE TABLE IF NOT EXISTS `vw_nifs_duplicados` (
 `nif` varchar(10)
 ,`num` bigint
@@ -467,6 +481,7 @@ CREATE TABLE IF NOT EXISTS `vw_nifs_duplicados` (
 --
 DROP TABLE IF EXISTS `vw_nifs_duplicados`;
 
+DROP VIEW IF EXISTS `vw_nifs_duplicados`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_nifs_duplicados`  AS SELECT `c`.`nif` AS `nif`, count(`c`.`nif`) AS `num` FROM `cliente` AS `c` WHERE (ifnull((select count(`c1`.`nif`) from `cliente` `c1` where (`c1`.`nif` = `c`.`nif`)),0) > 1) GROUP BY `c`.`nif` ORDER BY count(`c`.`nif`) DESC ;
 COMMIT;
 
