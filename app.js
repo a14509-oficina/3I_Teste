@@ -131,10 +131,8 @@ app.post('/cliente/eliminar/:cod', async (req, res) => {
 
 
 // Rota para obter todas as lojas
-app.get('/nome', async (req, res) => {
-    try {
-        const [rows] = 
-        await db.query('SELECT * FROM lojas ORDER BY nome asc;');
+app.post('/lojas', async (req, res) => {
+    try {const [rows] = await db.query('SELECT * FROM lojas ORDER BY nome asc;');
         res.json(rows);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -155,6 +153,7 @@ app.get('/lojas/:cod', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
 
 
 // Rota para inserir uma nova loja
@@ -186,7 +185,7 @@ app.post('/lojas/eliminar/:cod', async (req, res) => {
 //--------
 
 // Rota para obter todos os empregados
-app.get('/id', async (req, res) => {
+app.post('/empregados', async (req, res) => {
     try {
         const [rows] = 
         await db.query('SELECT * FROM empregados ORDER BY id asc;');
@@ -213,10 +212,10 @@ app.get('/empregados/:cod', async (req, res) => {
 
 
 // Rota para inserir uma novo empregado
-app.post('/lojas/inserir', async (req, res) => {
+app.post('/empregados/inserir', async (req, res) => {
     try {
         const { id,idloja,nome,funcao,email} = req.body;
-        const sql = 'INSERT INTO lojas (id,idloja,nome,funcao,email) VALUES (?)';
+        const sql = 'INSERT INTO empregados (id,idloja,nome,funcao,email) VALUES (?)';
         const [result] = await db.query(sql, [id,idloja,nome,funcao,email]);
         res.json({ id: result.insertId, nome });
     } catch (error) {
@@ -226,7 +225,7 @@ app.post('/lojas/inserir', async (req, res) => {
 
 
 //rota para eliminar um novo empregado
-app.post('/lojas/eliminar/:cod', async (req, res) => {
+app.post('/empregados/eliminar/:cod', async (req, res) => {
     try {
         const sql = 'DELETE FROM empregados WHERE id  = ?';
         const [result] = await db.query(sql, [req.params.cod]);
