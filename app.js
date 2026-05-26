@@ -16,7 +16,7 @@ app.use(express.json());
 const db = mysql.createPool({
     host: 'localhost',
     user: 'root', // Altere conforme necessário
-    password: '', // Altere conforme necessário
+    password: 'root', // Altere conforme necessário
     database: 'ipo'
 });
 
@@ -129,6 +129,7 @@ app.post('/cliente/eliminar/:cod', async (req, res) => {
 });
 ////----
 
+
 // Rota para obter todas as lojas
 app.get('/nome', async (req, res) => {
     try {
@@ -140,10 +141,10 @@ app.get('/nome', async (req, res) => {
     }
 });
 
-// Rota para obter uma lojas por stamp 
+// Rota para obter uma lojas por id 
 app.get('/lojas/:cod', async (req, res) => {
     try {
-        const sql = 'SELECT * FROM lojas WHERE stamp  = ?';
+        const sql = 'SELECT * FROM lojas WHERE id  = ?';
         const [rows] = await db.query(sql, [req.params.cod]);
         if (rows.length === 0) {
             return res.status(404).
@@ -169,7 +170,7 @@ app.post('/lojas/inserir', async (req, res) => {
 });
 
 
-//rota para eliminar um novo cliente
+//rota para eliminar uma loja
 app.post('/lojas/eliminar/:cod', async (req, res) => {
     try {
         const sql = 'DELETE FROM lojas WHERE stamp  = ?';
