@@ -168,6 +168,20 @@ app.post('/lojas/inserir', async (req, res) => {
     }
 });
 
+// Rota para atualizar uma loja
+app.put('/lojas_editar/:id', async (req, res) => {
+    try {
+        const { nome, local, telefone, email, website } = req.body;
+        const sql = 'UPDATE lojas SET nome = ?, local = ?, telefone = ?, email = ?, website = ? WHERE id = ?';
+        const [result] = await db.query(sql, [nome, local, telefone, email, website , req.params.id]);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Loja não encontrada' });
+        }
+        res.json({ id: req.params.id, nome, local, telefone, email, website });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 //rota para eliminar uma loja
 app.post('/lojas/eliminar/:cod', async (req, res) => {
@@ -187,7 +201,7 @@ app.post('/lojas/eliminar/:cod', async (req, res) => {
 // Rota para obter todos os empregados
 app.post('/empregados', async (req, res) => {
     try {
-        const [rows] = await db.query('SELECT * FROM empregados ORDER BY id asc;');
+        const [rows] = await db.query('SELECT * FROM empregados ORDER BY nome asc;');
         res.json(rows);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -222,6 +236,20 @@ app.post('/empregados/inserir', async (req, res) => {
     }
 });
 
+// Rota para atualizar um empregado
+app.put('/empregados_editar/:id', async (req, res) => {
+    try {
+        const { id, idloja, nome, funcao, email } = req.body;
+        const sql = 'UPDATE empregados SET id = ?, idloja = ?, nome = ?, funcao = ?, email = ? WHERE id = ?';
+        const [result] = await db.query(sql, [id, idloja, nome, funcao, email,  req.params.id]);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Empregado não encontrado' });
+        }
+        res.json({ id: req.params.id, nome, idloja, funcao, email });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 //rota para eliminar um novo empregado
 app.post('/empregados/eliminar/:cod', async (req, res) => {
