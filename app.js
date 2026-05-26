@@ -169,7 +169,7 @@ app.post('/lojas/inserir', async (req, res) => {
 });
 
 // Rota para atualizar uma loja
-app.put('/lojas_editar/:id', async (req, res) => {
+app.post('/lojas_editar/:id', async (req, res) => {
     try {
         const { nome, local, telefone, email, website } = req.body;
         const sql = 'UPDATE lojas SET nome = ?, local = ?, telefone = ?, email = ?, website = ? WHERE id = ?';
@@ -237,7 +237,8 @@ app.post('/empregados/inserir', async (req, res) => {
 });
 
 // Rota para atualizar um empregado
-app.put('/empregados_editar/:id', async (req, res) => {
+app.post
+('/empregados_editar/:id', async (req, res) => {
     try {
         const { id, idloja, nome, funcao, email } = req.body;
         const sql = 'UPDATE empregados SET id = ?, idloja = ?, nome = ?, funcao = ?, email = ? WHERE id = ?';
@@ -245,7 +246,7 @@ app.put('/empregados_editar/:id', async (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Empregado não encontrado' });
         }
-        res.json({ id: req.params.id, nome, local, telefone, email, website });
+        res.json({ id: req.params.id, nome, idloja, funcao, email });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
