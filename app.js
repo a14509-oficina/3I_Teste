@@ -159,9 +159,9 @@ app.get('/lojas/:cod', async (req, res) => {
 // Rota para inserir uma nova loja
 app.post('/lojas/inserir', async (req, res) => {
     try {
-        const { stamp, nome,local,telefone,email, website} = req.body;
-        const sql = 'INSERT INTO lojas (stamp, nome,local,telefone,email, website) VALUES (?)';
-        const [result] = await db.query(sql, [stamp, nome,local,telefone,email, website]);
+        const { nome,local,telefone,email, website} = req.body;
+        const sql = 'INSERT INTO lojas (nome,local,telefone,email, website) VALUES (?)';
+        const [result] = await db.query(sql, [nome,local,telefone,email, website]);
         res.json({ id: result.insertId, nome });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -187,8 +187,7 @@ app.post('/lojas/eliminar/:cod', async (req, res) => {
 // Rota para obter todos os empregados
 app.post('/empregados', async (req, res) => {
     try {
-        const [rows] = 
-        await db.query('SELECT * FROM empregados ORDER BY id asc;');
+        const [rows] = await db.query('SELECT * FROM empregados ORDER BY id asc;');
         res.json(rows);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -196,7 +195,7 @@ app.post('/empregados', async (req, res) => {
 });
 
 // Rota para obter um empregados por id 
-app.get('/empregados/:cod', async (req, res) => {
+app.post('/empregados/:cod', async (req, res) => {
     try {
         const sql = 'SELECT * FROM empregados WHERE id  = ?';
         const [rows] = await db.query(sql, [req.params.cod]);
