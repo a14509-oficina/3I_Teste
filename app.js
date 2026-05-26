@@ -245,7 +245,7 @@ app.put('/empregados_editar/:id', async (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Empregado não encontrado' });
         }
-        res.json({ id: req.params.id, nome, idloja, funcao, email });
+        res.json({ id: req.params.id, nome, local, telefone, email, website });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
